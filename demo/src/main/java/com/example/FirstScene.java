@@ -12,19 +12,74 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.Label;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.FontPosture;
 
 public class FirstScene extends Application {
-
+    ObservableList<FileData> data;
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Inventory Management");
+
+        //Label for education
+      Label label = new Label("Stock info:");
+      Font font = Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 12);
+      label.setFont(font);
+      //Creating a table view
+      TableView<FileData> table = new TableView<FileData>();
+       data = FXCollections.observableArrayList();
+      data.add(new FileData("file5", "random", "45 MB", "iroje"));
+      StockInsert obj= new StockInsert();
+      obj.stockListView(data);
+      //Creating columns
+      TableColumn fileNameCol = new TableColumn("Product Name");
+      fileNameCol.setCellValueFactory(new PropertyValueFactory<>("fileName"));
+      fileNameCol.setResizable(false);
+      fileNameCol.prefWidthProperty().bind(table.widthProperty().multiply(0.25));
+
+      TableColumn pathCol = new TableColumn("Price");
+      pathCol.setCellValueFactory(new PropertyValueFactory("path"));
+      pathCol.setResizable(false);
+      pathCol.prefWidthProperty().bind(table.widthProperty().multiply(0.25));
+
+      TableColumn sizeCol = new TableColumn("Stock Availble");
+      sizeCol.setResizable(false);
+      sizeCol.setCellValueFactory(new PropertyValueFactory("size"));
+      sizeCol.prefWidthProperty().bind(table.widthProperty().multiply(0.25));
+
+      TableColumn dateCol = new TableColumn("Retailer");
+      dateCol.setResizable(false);
+      dateCol.setCellValueFactory(new PropertyValueFactory("dateModified"));
+      dateCol.prefWidthProperty().bind(table.widthProperty().multiply(0.25));
+
+      //Adding data to the table
+      ObservableList<String> list = FXCollections.observableArrayList();
+      table.setItems(data);
+      table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+      table.getColumns().addAll(fileNameCol, pathCol, sizeCol, dateCol);
+      //Setting the size of the table
+      table.setMaxSize(700, 400);
+       
+
 
         // Create the registration form grid pane
         GridPane gridPane = createRegistrationFormPane();
         // Add UI controls to the registration form grid pane
         addUIControls(gridPane);
+        final VBox vbox = new VBox();
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setSpacing(5);
+        vbox.setPadding(new Insets(10, 10, 10, 10));
+        vbox.getChildren().addAll(gridPane,label,table);
         // Create a scene with registration form grid pane as the root node
-        Scene scene = new Scene(gridPane, 800, 500);
+        Scene scene = new Scene(vbox, 800, 500);
         // Set the scene in primary stage	
         primaryStage.setScene(scene);
         
@@ -147,6 +202,7 @@ public class FirstScene extends Application {
                     retailertext.clear();
                     stockavailabletext.clear();
                 }
+                obj.stockListView(data);
             }
         });
     }
