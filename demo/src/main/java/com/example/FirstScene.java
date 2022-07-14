@@ -35,7 +35,6 @@ public class FirstScene extends Application {
       //Creating a table view
       TableView<FileData> table = new TableView<FileData>();
        data = FXCollections.observableArrayList();
-      data.add(new FileData("file5", "random", "45 MB", "iroje"));
       StockInsert obj= new StockInsert();
       obj.stockListView(data);
       //Creating columns
